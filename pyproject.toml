@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vllm-epsilon-sampling"
+version = "0.1.0"
+description = "Epsilon sampling logits processor for vLLM v1 (Freitag et al., EMNLP 2023)"
+readme = "README.md"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.9"
+dependencies = [
+    "torch",
+    "vllm",   # v1 LogitsProcessor API
+]
+
+# ---------------------------------------------------------------------------
+# vLLM auto-discovery: vLLM scans this entry-point group at startup and loads
+# every registered LogitsProcessor subclass automatically, so you don't need
+# to pass it explicitly to LLM()/vllm serve.
+# ---------------------------------------------------------------------------
+[project.entry-points."vllm.logits_processors"]
+epsilon_sampling = "vllm_epsilon_sampling.processor:EpsilonSamplingLogitsProcessor"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["vllm_epsilon_sampling*"]
